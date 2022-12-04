@@ -1,5 +1,5 @@
-import { Paper, Card, Grid, TextField, Button } from "@mui/material";
-import React, { useState } from "react";
+import { Grid, TextField, Button } from "@mui/material";
+import React from "react";
 
 export const Register = () => {
     return (

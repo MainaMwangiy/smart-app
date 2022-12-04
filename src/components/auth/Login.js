@@ -1,5 +1,5 @@
 import React from 'react'
-import { Paper, Card, Grid, TextField, Button } from "@mui/material";
+import { Grid, TextField, Button } from "@mui/material";
 
 export const Login = () => {
   return (
