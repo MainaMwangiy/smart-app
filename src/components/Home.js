@@ -1,7 +1,15 @@
+
 import { Box, Toolbar, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
+import {
+  Box,
+  Toolbar,
+} from "@mui/material";
+import React from "react";
+import { DataGrid } from "@mui/x-data-grid";
+
 
 const columns = [
   { field: "id", headerName: "Id", width: 90 },
@@ -22,7 +30,6 @@ const Home = (props) => {
     }
     fetchData()
   }, []);
-console.log(data)
   const grid = () => {
     return (
       <DataGrid
@@ -43,6 +50,12 @@ console.log(data)
       <Grid container spacing={2} sx={{ mt: 10, width: "50%", ml: "25%" }}>
         <Box sx={{ height: 400, width: "100%" }}>{grid()}</Box>
       </Grid>
+      <Box sx={{ display: "flex" }}>
+        <Box component="main" sx={{ p: 3 }}>
+          <Toolbar />
+          <Box sx={{ height: 400, width: "100%" }}>{grid()}</Box>
+        </Box>
+      </Box>
     </div>
   );
 };

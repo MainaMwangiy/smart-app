@@ -9,6 +9,7 @@ const initialValues = Object.freeze({
   password: "",
   cpassword: "",
 });
+import React from "react";
 
 export const Register = () => {
   const [formData, setFormData] = useState(initialValues);
