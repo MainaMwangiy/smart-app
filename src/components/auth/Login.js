@@ -7,8 +7,6 @@ const initialValues = Object.freeze({
   email: "",
   password: "",
 });
-import React from 'react'
-import { Grid, TextField, Button } from "@mui/material";
 
 export const Login = () => {
   const [formData, setFormData] = useState(initialValues);

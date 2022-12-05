@@ -3,6 +3,7 @@ import { Login } from "./components/auth/Login";
 import Home from "./components/Home";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Landing from "./components/Landing";
+import { Register } from "./components/auth/Register";
 
 
 function App() {
@@ -14,8 +15,6 @@ function App() {
         <Route path={"/"} element={<Home/>}/>
         <Route path={"/Login"} element={<Login/>}/>
         <Route path={"/Register"} element={<Register/>}/>
-      </Routes>
-
       </Routes>
       </BrowserRouter>
     </>
