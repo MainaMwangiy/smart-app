@@ -1,3 +1,8 @@
+
+import { Box, Toolbar, Grid } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { DataGrid } from "@mui/x-data-grid";
+import axios from "axios";
 import {
   Box,
   Toolbar,
@@ -5,25 +10,30 @@ import {
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 
+
 const columns = [
   { field: "id", headerName: "Id", width: 90 },
+  { field: "fullname", headerName: "fullname", width: 150, editable: true },
   { field: "email", headerName: "Email", width: 150, editable: true },
-  { field: "password", headerName: "password", width: 150, editable: true },
-];
-const rows = [
-  { id: "1", email: "test@gmail.com", password: "test@12345" },
-  { id: "2", email: "test@gmail.com", password: "test@12345" },
-  { id: "3", email: "test@gmail.com", password: "test@12345" },
-  { id: "4", email: "test@gmail.com", password: "test@12345" },
-  { id: "5", email: "test@gmail.com", password: "test@12345" },
-  { id: "6", email: "test@gmail.com", password: "test@12345" },
+  { field: "contact", headerName: "contact", width: 150, editable: true },
+  { field: "address", headerName: "address", width: 150, editable: true },
 ];
 
 const Home = (props) => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios("http://localhost:4000/auth/users")  
+      console.log(result)
+      setData(result.data.user)
+    }
+    fetchData()
+  }, []);
   const grid = () => {
     return (
       <DataGrid
-        rows={rows}
+        rows={data}
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5]}
@@ -35,6 +45,11 @@ const Home = (props) => {
 
   return (
     <div>
+      <Toolbar />
+
+      <Grid container spacing={2} sx={{ mt: 10, width: "50%", ml: "25%" }}>
+        <Box sx={{ height: 400, width: "100%" }}>{grid()}</Box>
+      </Grid>
       <Box sx={{ display: "flex" }}>
         <Box component="main" sx={{ p: 3 }}>
           <Toolbar />
