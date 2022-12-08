@@ -5,12 +5,13 @@ import { useNavigate } from "react-router";
 // import FormData from "form-data";
 
 const initialValues = Object.freeze({
+  fullname: "",
   email: "",
-  password: "",
-  cpassword: "",
+  contact: "",
+  address: "",
 });
 
-export const Register = () => {
+export const AddEmployee = () => {
   const [formData, setFormData] = useState(initialValues);
   const navigate = useNavigate()
   const onChange = (event) => {
@@ -20,12 +21,14 @@ export const Register = () => {
   const save = async (e) => {
     e.preventDefault();
     let data = JSON.stringify({
+      fullname: formData.fullname || "",
       email: formData.email || "",
-      password: formData.password || ""
+      contact: formData.contact || "",
+      address: formData.address || "",
     })
 
     try {
-      await axios.post("http://localhost:4000/auth/register", data, {
+      await axios.post("http://localhost:4000/work/create-employee", data, {
         headers: {"Content-Type" : "application/json"}
       }).then(() => {
         navigate("/login")
@@ -37,6 +40,17 @@ export const Register = () => {
   return (
     <form onSubmit={save}>
       <Grid container spacing={2} sx={{ mt: 10, width: "50%", ml: "25%" }}>
+      <Grid item xs={12}>
+          <TextField
+            id="outlined-basic"
+            label="Fullname"
+            name="fullname"
+            value={formData.fullname || ""}
+            onChange={onChange}
+            variant="outlined"
+            fullWidth
+          />
+        </Grid>
         <Grid item xs={12}>
           <TextField
             id="outlined-basic"
@@ -51,9 +65,9 @@ export const Register = () => {
         <Grid item xs={12}>
           <TextField
             id="outlined-basic"
-            label="Password"
-            name="password"
-            value={formData.password || ""}
+            label="Contact"
+            name="contact"
+            value={formData.contact || ""}
             onChange={onChange}
             variant="outlined"
             fullWidth
@@ -62,16 +76,16 @@ export const Register = () => {
         <Grid item xs={12}>
           <TextField
             id="outlined-basic"
-            label="Confirm Password"
-            name="cpassword"
-            value={formData.cpassword || ""}
+            label="Address"
+            name="address"
+            value={formData.address || ""}
             onChange={onChange}
             variant="outlined"
             fullWidth
           />
         </Grid>
         <Button variant="contained" sx={{ m: 2 }} type="submit">
-          {"Register"}
+          {"Add New"}
         </Button>
       </Grid>
     </form>

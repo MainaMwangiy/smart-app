@@ -13,14 +13,14 @@ const columns = [
   { field: "address", headerName: "address", width: 150, editable: true },
 ];
 
-const Home = (props) => {
+const Home = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await axios("http://localhost:4000/auth/users")  
+      const result = await axios("http://localhost:4000/work/get-employee")  
       console.log(result)
-      setData(result.data.user)
+      setData(result.data.employee)
     }
     fetchData()
   }, []);
@@ -40,16 +40,9 @@ const Home = (props) => {
   return (
     <div>
       <Toolbar />
-
       <Grid container spacing={2} sx={{ mt: 10, width: "50%", ml: "25%" }}>
         <Box sx={{ height: 400, width: "100%" }}>{grid()}</Box>
       </Grid>
-      <Box sx={{ display: "flex" }}>
-        <Box component="main" sx={{ p: 3 }}>
-          <Toolbar />
-          <Box sx={{ height: 400, width: "100%" }}>{grid()}</Box>
-        </Box>
-      </Box>
     </div>
   );
 };
