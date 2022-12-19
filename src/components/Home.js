@@ -30,7 +30,7 @@ const Home = () => {
         rows={data}
         columns={columns}
         pageSize={5}
-        rowsPerPageOptions={[5]}
+        rowsPerPageOptions={[10]}
         checkboxSelection
         disableSelectionOnClick
       />
