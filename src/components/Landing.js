@@ -11,16 +11,11 @@ import {
   Typography,
   AppBar,
   Drawer,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  TextField,
-  DialogActions,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import React, { useState } from "react";
 import { navHeaders } from "./utils/constants";
+import AddEmployee from "./AddEmployee";
 
 const constants = navHeaders;
 const Landing = (props) => {
@@ -28,10 +23,10 @@ const Landing = (props) => {
   const [openMobile, setOpenMobile] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
 
-  const handleOpenDialog = () => {
+  const handleOpen = () => {
     setOpenDialog(true);
   };
-  const handleCloseDialog = () => {
+  const handleClose = () => {
     setOpenDialog(false);
   };
 
@@ -47,68 +42,29 @@ const Landing = (props) => {
       <Divider />
       <List>
         {constants &&
-          constants?.map((item) => (
-            <ListItem key={item.id}>
-              <ListItemButton
-                sx={{ textAlign: "center" }}
-                href={`${item.url || "/"}`}
-              >
-                <ListItemText> {item.NavValue} </ListItemText>
-              </ListItemButton>
-            </ListItem>
-          ))}
+          constants?.map((item) =>
+            item.url === "/AddNew" ? (
+              <ListItem key={item.id}>
+                <ListItemButton
+                  sx={{ textAlign: "center" }}
+                  onClick={handleOpen}
+                >
+                  <ListItemText> {"Add New"} </ListItemText>
+                </ListItemButton>
+              </ListItem>
+            ) : (
+              <ListItem key={item.id}>
+                <ListItemButton
+                  sx={{ textAlign: "center" }}
+                  href={`${item.url || "/"}`}
+                >
+                  <ListItemText> {item.NavValue} </ListItemText>
+                </ListItemButton>
+              </ListItem>
+            )
+          )}
       </List>
     </Box>
-  );
-
-  const addNewEmployee = (
-    <div>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Add New Employee</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Enter details to add new employee on table
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="fullname"
-            label="Full Name"
-            type="text"
-            fullWidth
-            variant="standard"
-          />
-          <TextField
-            margin="dense"
-            id="email"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="standard"
-          />
-          <TextField
-            margin="dense"
-            id="contact"
-            label="Contact"
-            type="text"
-            fullWidth
-            variant="standard"
-          />
-          <TextField
-            margin="dense"
-            id="address"
-            label="Address"
-            type="text"
-            fullWidth
-            variant="standard"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={handleCloseDialog}>Subscribe</Button>
-        </DialogActions>
-      </Dialog>
-    </div>
   );
 
   const container =
@@ -142,17 +98,25 @@ const Landing = (props) => {
               {constants &&
                 constants?.map((item) =>
                   item.url === "/AddNew" ? (
-                    <Button sx={{ color: "#fff" }} onClick={handleOpenDialog}>
-                      {"Add New Button"} {addNewEmployee}
-                    </Button>
+                    <>
+                      <AddEmployee
+                        isDialogOpened={openDialog}
+                        handleCloseDialog={handleClose}
+                      />
+                      <Button sx={{ color: "#fff" }} onClick={handleOpen}>
+                        {"Add New Button"}
+                      </Button>
+                    </>
                   ) : (
-                    <Button
-                      key={item.id}
-                      sx={{ color: "#fff" }}
-                      href={`${item.url || "/"}`}
-                    >
-                      {item.NavValue}
-                    </Button>
+                    <>
+                      <Button
+                        key={item.id}
+                        sx={{ color: "#fff" }}
+                        href={`${item.url || "/"}`}
+                      >
+                        {item.NavValue}
+                      </Button>
+                    </>
                   )
                 )}
             </Box>

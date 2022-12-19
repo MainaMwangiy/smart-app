@@ -15,25 +15,33 @@ export const Login = () => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
-  
+
   const login = async (e) => {
     e.preventDefault();
     let data = JSON.stringify({
       email: formData.email || "",
       password: formData.password || "",
     });
-    console.log(data);
     try {
-      await axios
-        .post("http://localhost:4000/auth/login", data, {
+      const response = await axios.post(
+        "http://localhost:4000/auth/login",
+        data,
+        {
           headers: { "Content-Type": "application/json" },
-        })
-        .then(() => {
-          // console.log(result);
-          navigate("/", {state: formData});
-        });
+        }
+      );
+      if (!response) {
+        alert(response.data.errors);
+      } else {
+        alert(response.data.message);
+        navigate("/");
+        const token = response.data.token;
+        localStorage.setItem("jwt", token);
+      }
     } catch (error) {
-      console.error(error);
+      if (error) {
+        alert(error.response.data.message);
+      }
     }
   };
   return (
@@ -64,7 +72,10 @@ export const Login = () => {
         <Button variant="contained" sx={{ m: 2 }} type="submit">
           {"Login"}
         </Button>
-        <Link href="/register" component={"button"} sx={{}}> {"No account? Register"} </Link>
+        <Link href="/register" component={"button"} sx={{}}>
+          {" "}
+          {"No account? Register"}{" "}
+        </Link>
       </Grid>
     </form>
   );
