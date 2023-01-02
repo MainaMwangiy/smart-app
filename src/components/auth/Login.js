@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Grid, TextField, Button, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const initialValues = Object.freeze({
   email: "",
@@ -33,15 +34,21 @@ export const Login = () => {
       if (!response) {
         alert(response.data.errors);
       } else {
-        alert(response.data.message);
+        Swal.fire({
+          title: "Success",
+          text: `${formData.email} Logged In Successfully`,
+          icon: "success",
+        });
         navigate("/");
         const token = response.data.token;
         localStorage.setItem("jwt", token);
       }
     } catch (error) {
-      if (error) {
-        alert(error.response.data.message);
-      }
+      Swal.fire({
+        title: "Error",
+        icon: "error",
+        text: "Login Failed",
+      });
     }
   };
   return (

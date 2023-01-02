@@ -2,6 +2,7 @@ import { Grid, TextField, Button } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 // import FormData from "form-data";
 
 const initialValues = Object.freeze({
@@ -12,7 +13,7 @@ const initialValues = Object.freeze({
 
 export const Register = () => {
   const [formData, setFormData] = useState(initialValues);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const onChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
@@ -21,17 +22,28 @@ export const Register = () => {
     e.preventDefault();
     let data = JSON.stringify({
       email: formData.email || "",
-      password: formData.password || ""
-    })
+      password: formData.password || "",
+    });
 
     try {
-      await axios.post("http://localhost:4000/auth/register", data, {
-        headers: {"Content-Type" : "application/json"}
-      }).then(() => {
-        navigate("/login")
-      })
+      await axios
+        .post("http://localhost:4000/auth/register", data, {
+          headers: { "Content-Type": "application/json" },
+        })
+        .then(() => {
+          Swal.fire({
+            title: "Success",
+            text: `${formData.email} Added successfully`,
+            icon: "success",
+          });
+          navigate("/login");
+        });
     } catch (error) {
-      console.error(error);
+      Swal.fire({
+        title: "Error",
+        icon: "error",
+        text: "Registration Failed",
+      });
     }
   };
   return (

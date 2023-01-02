@@ -12,11 +12,11 @@ const onEdit = (e) => {
 };
 
 const columns = [
-  { field: "id", headerName: "Id", width: 90 },
-  { field: "fullname", headerName: "fullname", width: 150, editable: true },
-  { field: "email", headerName: "Email", width: 150, editable: true },
-  { field: "contact", headerName: "contact", width: 150, editable: true },
-  { field: "address", headerName: "address", width: 150, editable: true },
+  { field: "id", headerName: "Id", width: 280 },
+  { field: "fullname", headerName: "fullname", width: 200, editable: true },
+  { field: "email", headerName: "Email", width: 200, editable: true },
+  { field: "contact", headerName: "contact", width: 200, editable: true },
+  { field: "address", headerName: "address", width: 200, editable: true },
   {
     field: "actions",
     headerName: "Actions",
@@ -47,10 +47,15 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios("http://localhost:4000/work/get-employee");
+      if(!result){
+        return(
+          <div>Loading...</div>
+        )
+      }
       setData(result.data.employee);
     };
     fetchData();
-  }, []);
+  }, [data]);
   const grid = () => {
     return (
       <DataGrid
