@@ -42,6 +42,8 @@ export const Login = () => {
         navigate("/");
         const token = response.data.token;
         localStorage.setItem("jwt", token);
+        localStorage.setItem("user", JSON.stringify({ name: data.email }));
+        window.location.reload();
       }
     } catch (error) {
       Swal.fire({
