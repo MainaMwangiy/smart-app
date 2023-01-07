@@ -10,6 +10,7 @@ import {
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 // import FormData from "form-data";
 
 const initialValues = Object.freeze({
@@ -24,6 +25,8 @@ export default function AddEmployee({ isDialogOpened, handleCloseDialog }) {
   const navigate = useNavigate();
   const handleClose = () => {
     handleCloseDialog(false);
+    //Clear form after closing modal
+    setFormData(initialValues)
   };
   const onChange = (event) => {
     const { name, value } = event.target;
@@ -44,7 +47,14 @@ export default function AddEmployee({ isDialogOpened, handleCloseDialog }) {
           headers: { "Content-Type": "application/json" },
         })
         .then(() => {
+          Swal.fire({
+            title: "Success",
+            text: `${formData.fullname} Added successfully`,
+            icon: "success"
+          })
           navigate("/");
+          //close modal after adding new employee
+          handleClose()
         });
     } catch (error) {
       console.error(error);
