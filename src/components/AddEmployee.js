@@ -57,7 +57,11 @@ export default function AddEmployee({ isDialogOpened, handleCloseDialog }) {
           handleClose()
         });
     } catch (error) {
-      console.error(error);
+      Swal.fire({
+        title: "Error",
+        icon: "error",
+        text: `Failed to Add ${formData.fullname}`,
+      });
     }
   };
   return (

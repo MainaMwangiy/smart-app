@@ -32,7 +32,11 @@ export const Login = () => {
         }
       );
       if (!response) {
-        alert(response.data.errors);
+        Swal.fire({
+          title: "Error",
+          icon: "error",
+          text: "Login Failed",
+        });
       } else {
         Swal.fire({
           title: "Success",
