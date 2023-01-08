@@ -1,144 +1,103 @@
-import {
-  Box,
-  Button,
-  Divider,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  MenuItem,
-  Toolbar,
-  Typography,
-  AppBar,
-  Drawer,
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import React, { useState } from "react";
+import { Box, Toolbar, Grid, Button } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
+import axios from "axios";
+import Swal from "sweetalert2";
 
-const navHeaders = [
-  { id: "1", NavValue: "Home" },
-  { id: "2", NavValue: "Add New Button" },
-  { id: "3", NavValue: "Login" },
-];
+const Home = () => {
+  const [data, setData] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
 
-const columns = [
-  { field: "id", headerName: "Id", width: 90 },
-  { field: "email", headerName: "Email", width: 150, editable: true },
-  { field: "password", headerName: "password", width: 150, editable: true },
-];
-const rows = [
-  { id: "1", email: "test@gmail.com", password: "test@12345" },
-  { id: "2", email: "test@gmail.com", password: "test@12345" },
-  { id: "3", email: "test@gmail.com", password: "test@12345" },
-  { id: "4", email: "test@gmail.com", password: "test@12345" },
-  { id: "5", email: "test@gmail.com", password: "test@12345" },
-  { id: "6", email: "test@gmail.com", password: "test@12345" },
-];
-
-const Home = (props) => {
-  const { window } = props;
-  const [openMobile, setOpenMobile] = useState(false);
-
-  const handleNavbarToggle = () => {
-    setOpenMobile(!openMobile);
+  const onDelete = async (e) => {
+    e.preventDefault();
+    try {
+      setSelectedRows((rows) =>
+        rows.filter((r) => !selectedRows.includes(r.id))
+      );
+      let data = JSON.stringify({
+        id: selectedRows[0] || "",
+      });
+      await axios
+        .post("http://localhost:4000/auth/delete", data, {
+          headers: { "Content-Type": "application/json" },
+        })
+        .then(() => {
+          Swal.fire({ title: "Success", text: "Deleted", icon: "success" });
+        });
+    } catch (error) {
+      Swal.fire({
+        title: "Fail",
+        text: "Failed to Delete Employee",
+        icon: "error",
+      });
+    }
   };
 
-  const drawer = (
-    <Box onClick={handleNavbarToggle} sx={{ textAlign: "center" }}>
-      <Typography variant="h6" sx={{ my: 2 }}>
-        {"Smart App"}
-      </Typography>
-      <Divider />
-      <List>
-        {navHeaders &&
-          navHeaders?.map((item) => (
-            <ListItem key={item.id}>
-              <ListItemButton sx={{ textAlign: "center" }}>
-                <ListItemText> {item.NavValue} </ListItemText>
-              </ListItemButton>
-            </ListItem>
-          ))}
-      </List>
-    </Box>
-  );
-
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
-
+  const columns = [
+    { field: "id", headerName: "Id", width: 280 },
+    { field: "fullname", headerName: "fullname", width: 200},
+    { field: "email", headerName: "Email", width: 200},
+    { field: "contact", headerName: "contact", width: 200},
+    { field: "address", headerName: "address", width: 200},
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 200,
+      renderCell: (params) => {
+        return (
+          <>
+            <Button
+              onClick={(e) =>
+                Swal.fire({ title: "Success", text: "Edited", icon: "success" })
+              }
+              variant="contained"
+            >
+              {"Edit"}
+            </Button>
+            <Button
+              color={"error"}
+              onClick={onDelete}
+              variant="contained"
+              className="ml-2"
+            >
+              {"Delete"}
+            </Button>
+          </>
+        );
+      },
+    },
+  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios("http://localhost:4000/work/get-employee");
+      if (!result) {
+        return <div>Loading...</div>;
+      }
+      setData(result.data.employee);
+    };
+    fetchData();
+  }, [data]);
   const grid = () => {
     return (
       <DataGrid
-        rows={rows}
+        rows={data}
         columns={columns}
         pageSize={5}
-        rowsPerPageOptions={[5]}
+        rowsPerPageOptions={[10]}
         checkboxSelection
         disableSelectionOnClick
+        onSelectionModelChange={setSelectedRows}
+        selectionModel={selectedRows}
       />
     );
   };
 
   return (
     <div>
-      <Box sx={{ display: "flex" }}>
-        <AppBar component="nav">
-          <Toolbar>
-            <MenuIcon
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleNavbarToggle}
-              sx={{ mr: 2, display: { sm: "none" } }}
-            >
-              <MenuItem />
-            </MenuIcon>
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{
-                flexGrow: 1,
-                display: "flex",
-                justifyContent: "flex-start",
-              }}
-            >
-              {"Smart App"}
-            </Typography>
-            <Box sx={{ display: { xs: "none", sm: "block" } }}>
-              {navHeaders &&
-                navHeaders?.map((item) => (
-                  <Button key={item.id} sx={{ color: "#fff" }}>
-                    {item.NavValue}
-                  </Button>
-                ))}
-            </Box>
-          </Toolbar>
-        </AppBar>
-        <Box component="nav">
-          <Drawer
-            container={container}
-            variant="temporary"
-            open={openMobile}
-            onClose={handleNavbarToggle}
-            ModalProps={{
-              keepMounted: true,
-            }}
-            sx={{
-              display: { xs: "block", sm: "none" },
-              "& .MuiDrawer-paper": {
-                boxSizing: "border-box",
-                width: 240,
-              },
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Box>
-        <Box component="main" sx={{ p: 3 }}>
-          <Toolbar />
-          <Box sx={{ height: 400, width: 1200 }}>{grid()}</Box>
-        </Box>
-      </Box>
+      <Toolbar />
+      <Grid container spacing={2} sx={{ mt: 10, width: "90%", ml: "5%" }}>
+        <Box sx={{ height: 450, width: "100%" }}>{grid()}</Box>
+      </Grid>
     </div>
   );
 };
