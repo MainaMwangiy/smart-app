@@ -19,35 +19,27 @@ export const Login = () => {
 
   const login = async (e) => {
     e.preventDefault();
-    let data = JSON.stringify({
-      email: formData.email || "",
-      password: formData.password || "",
-    });
     try {
       const response = await axios.post(
         "http://localhost:4000/auth/login",
-        data,
+        formData,
         {
           headers: { "Content-Type": "application/json" },
         }
       );
-      if (!response) {
-        Swal.fire({
-          title: "Error",
-          icon: "error",
-          text: "Login Failed",
-        });
-      } else {
+      if (response.data.success) {
         Swal.fire({
           title: "Success",
           text: `${formData.email} Logged In Successfully`,
           icon: "success",
         });
         navigate("/");
-        const token = response.data.token;
-        localStorage.setItem("jwt", token);
-        localStorage.setItem("user", JSON.stringify({ name: data.email }));
-        window.location.reload();
+      } else {
+        Swal.fire({
+          title: "Error",
+          icon: "error",
+          text: "Login Failed",
+        });
       }
     } catch (error) {
       Swal.fire({
