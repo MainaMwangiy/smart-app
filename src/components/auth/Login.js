@@ -33,6 +33,8 @@ export const Login = () => {
           text: `${formData.email} Logged In Successfully`,
           icon: "success",
         });
+        //set authenticated to true before navigating
+        localStorage.setItem("token", response.data.token);
         navigate("/");
       } else {
         Swal.fire({
@@ -74,13 +76,19 @@ export const Login = () => {
             fullWidth
           />
         </Grid>
-        <Button variant="contained" sx={{ m: 2 }} type="submit">
-          {"Login"}
-        </Button>
-        <Link href="/register" component={"button"} sx={{}}>
-          {" "}
-          {"No account? Register"}{" "}
-        </Link>
+        <div className="d-flex justify-content-between">
+          <Button
+            variant="contained"
+            sx={{ m: 2 }}
+            type="submit"
+            className="justify-content-start"
+          >
+            {"Login"}
+          </Button>
+          <Link href="/Register" sx={{}} className="justify-content-end">
+            {"No account? Register"}
+          </Link>
+        </div>
       </Grid>
     </form>
   );

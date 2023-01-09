@@ -1,4 +1,4 @@
-import { Grid, TextField, Button } from "@mui/material";
+import { Grid, TextField, Button, Link } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
@@ -82,9 +82,19 @@ export const Register = () => {
             fullWidth
           />
         </Grid>
-        <Button variant="contained" sx={{ m: 2 }} type="submit">
-          {"Register"}
-        </Button>
+        <div className="d-flex justify-content-between">
+          <Button
+            variant="contained"
+            sx={{ m: 2 }}
+            type="submit"
+            className="justify-content-start"
+          >
+            {"Register"}
+          </Button>
+          <Link href="/Login" sx={{}} className="justify-content-end">
+            {"Has account? Login"}
+          </Link>
+        </div>
       </Grid>
     </form>
   );
