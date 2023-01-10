@@ -34,6 +34,7 @@ const Landing = (props) => {
 
   const logOut = () => {
     setIsLoggedIn(false);
+    localStorage.removeItem("token")
     navigate("/Login");
   };
 
