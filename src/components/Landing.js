@@ -1,27 +1,41 @@
 import {
   Box,
-  Button,
   Divider,
   List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
   MenuItem,
   Toolbar,
   Typography,
   AppBar,
   Drawer,
+  Link,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import React, { useState } from "react";
-import { navHeaders } from "./utils/constants";
+import React, { useEffect, useState } from "react";
+// import { navHeaders } from "./utils/constants";
 import AddEmployee from "./AddEmployee";
+import { useNavigate } from "react-router-dom";
 
-const constants = navHeaders;
+// const constants = navHeaders;
 const Landing = (props) => {
   const { window } = props;
+  const navigate = useNavigate();
   const [openMobile, setOpenMobile] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const isAuthenticated = localStorage.getItem("token");
+  useEffect(() => {
+    if (isAuthenticated === null) {
+      setIsLoggedIn(false);
+    } else {
+      setIsLoggedIn(true);
+    }
+  }, [isAuthenticated]);
+
+  const logOut = () => {
+    setIsLoggedIn(false);
+    navigate("/Login");
+  };
 
   const handleOpen = () => {
     setOpenDialog(true);
@@ -41,7 +55,7 @@ const Landing = (props) => {
       </Typography>
       <Divider />
       <List>
-        {constants &&
+        {/* {constants &&
           constants?.map((item) =>
             item.url === "/AddNew" ? (
               <ListItem key={item.id}>
@@ -62,7 +76,7 @@ const Landing = (props) => {
                 </ListItemButton>
               </ListItem>
             )
-          )}
+          )} */}
       </List>
     </Box>
   );
@@ -74,52 +88,84 @@ const Landing = (props) => {
       <Box sx={{ display: "flex" }}>
         <AppBar component="nav">
           <Toolbar>
-            <MenuIcon
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleNavbarToggle}
-              sx={{ mr: 2, display: { sm: "none" } }}
-            >
-              <MenuItem />
-            </MenuIcon>
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{
-                flexGrow: 1,
-                display: "flex",
-                justifyContent: "flex-start",
-              }}
-            >
-              {"Smart App"}
-            </Typography>
-            <Box sx={{ display: { xs: "none", sm: "block" } }}>
-              {constants &&
-                constants?.map((item) =>
-                  item.url === "/AddNew" ? (
+            <>
+              <MenuIcon
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleNavbarToggle}
+                sx={{ mr: 2, display: { sm: "none" } }}
+              >
+                <MenuItem />
+              </MenuIcon>
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{
+                  flexGrow: 1,
+                  display: "flex",
+                  justifyContent: "flex-start",
+                }}
+              >
+                <Link sx={{ color: "#fff" }} href="/">
+                  {"Smart App"}
+                </Link>
+              </Typography>
+
+              <Box sx={{ display: { xs: "none", sm: "block" } }}>
+                <>
+                  {isLoggedIn ? (
                     <>
-                      <AddEmployee
-                        isDialogOpened={openDialog}
-                        handleCloseDialog={handleClose}
-                      />
-                      <Button sx={{ color: "#fff" }} onClick={handleOpen}>
-                        {"Add New Button"}
-                      </Button>
+                      <div className="navbar">
+                        <div className="nav-item">
+                          <AddEmployee
+                            isDialogOpened={openDialog}
+                            handleCloseDialog={handleClose}
+                          />
+                          <Typography
+                            variant="h6"
+                            component="div"
+                            sx={{
+                              flexGrow: 1,
+                              display: "flex",
+                              justifyContent: "flex-start",
+                            }}
+                          >
+                            <Link
+                              sx={{ color: "#fff" }}
+                              to="/AddNew"
+                              onClick={handleOpen}
+                            >
+                              {"Add Employee"}
+                            </Link>
+                          </Typography>
+                        </div>
+                        <div className="nav-item">
+                          <Typography
+                            variant="h6"
+                            component="div"
+                            sx={{
+                              flexGrow: 1,
+                              display: "flex",
+                              justifyContent: "flex-end",
+                            }}
+                          >
+                            <Link
+                              sx={{ color: "#fff" }}
+                              to="/Logout"
+                              onClick={logOut}
+                            >
+                              {"Logout"}
+                            </Link>
+                          </Typography>
+                        </div>
+                      </div>
+                      <div className="d-flex justify-space-between"></div>
                     </>
-                  ) : (
-                    <>
-                      <Button
-                        key={item.id}
-                        sx={{ color: "#fff" }}
-                        href={`${item.url || "/"}`}
-                      >
-                        {item.NavValue}
-                      </Button>
-                    </>
-                  )
-                )}
-            </Box>
+                  ) : null}
+                </>
+              </Box>
+            </>
           </Toolbar>
         </AppBar>
         <Box component="nav">
