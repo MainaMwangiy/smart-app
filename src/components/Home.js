@@ -3,19 +3,22 @@ import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 
 const Home = () => {
   const [data, setData] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
-  
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+
   const onDelete = async (e) => {
     e.preventDefault();
     try {
       setSelectedRows((rows) =>
         rows.filter((r) => !selectedRows.includes(r.id))
       );
-      const requiredId = data.map((temp) => {
-        if(temp.id  === selectedRows[0]){
+      data.map((temp) => {
+        if (temp.id === selectedRows[0]) {
           let i = selectedRows.indexOf(selectedRows[0])
           selectedRows[i] = temp._id
         }
@@ -28,7 +31,24 @@ const Home = () => {
           headers: { "Content-Type": "application/json" },
         })
         .then(() => {
-          Swal.fire({ title: "Success", text: "Deleted", icon: "success" });
+          Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to delete this?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              Swal.fire(
+                'Deleted!',
+                `'Your file has been deleted.'`,
+                'success'
+              )
+              navigate("/")
+            }
+          })
         });
     } catch (error) {
       Swal.fire({
@@ -40,10 +60,10 @@ const Home = () => {
   };
 
   const columns = [
-    { field: "fullname", headerName: "fullname", width: 200},
-    { field: "email", headerName: "Email", width: 200},
-    { field: "contact", headerName: "contact", width: 200},
-    { field: "address", headerName: "address", width: 200},
+    { field: "fullname", headerName: "fullname", width: 200 },
+    { field: "email", headerName: "Email", width: 200 },
+    { field: "contact", headerName: "contact", width: 200 },
+    { field: "address", headerName: "address", width: 200 },
     {
       field: "edit",
       headerName: "Edit",
@@ -62,7 +82,7 @@ const Home = () => {
           </>
         );
       },
-    },{
+    }, {
       field: "delete",
       headerName: "Delete",
       width: 200,
@@ -84,26 +104,32 @@ const Home = () => {
   ];
   useEffect(() => {
     const fetchData = async () => {
-      const result = await axios("http://localhost:4000/work/get-employee");
-      if (!result) {
-        return <div>Loading...</div>;
-      }
-      setData(result.data.employee);
+      setLoading(true);
+      await axios
+        .get("http://localhost:4000/work/get-employee")
+        .then((response) => {
+          setData(response.data.employee);
+          setLoading(false);
+        }).catch(error => {
+          setLoading(false)
+        });
     };
     fetchData();
-  }, [data]);
+  }, []);
+
   const grid = () => {
     return (
-      <DataGrid
-        rows={data}
-        columns={columns}
-        pageSize={10}
-        rowsPerPageOptions={[10]}
-        checkboxSelection
-        disableSelectionOnClick
-        onSelectionModelChange={setSelectedRows}
-        selectionModel={selectedRows}
-      />
+          <DataGrid
+            rows={data}
+            columns={columns}
+            pageSize={10}
+            rowsPerPageOptions={[10]}
+            checkboxSelection
+            disableSelectionOnClick
+            onSelectionModelChange={setSelectedRows}
+            selectionModel={selectedRows}
+            loading={loading}
+          />
     );
   };
 

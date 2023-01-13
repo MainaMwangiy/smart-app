@@ -42,7 +42,7 @@ export default function AddEmployee({ isDialogOpened, handleCloseDialog }) {
     });
 
     try {
-      await axios
+      const response = await axios
         .post("http://localhost:4000/work/create-employee", data, {
           headers: { "Content-Type": "application/json" },
         })
