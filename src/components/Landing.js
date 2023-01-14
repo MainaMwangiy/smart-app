@@ -14,6 +14,7 @@ import React, { useEffect, useState } from "react";
 // import { navHeaders } from "./utils/constants";
 import AddEmployee from "./AddEmployee";
 import { useNavigate } from "react-router-dom";
+import { useIsAuthenticated, useMsal } from "@azure/msal-react";
 
 // const constants = navHeaders;
 const Landing = (props) => {
@@ -23,7 +24,9 @@ const Landing = (props) => {
   const [openDialog, setOpenDialog] = useState(false);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const isAuthenticated = localStorage.getItem("token");
+  const msAuth = useIsAuthenticated();
+  const {instance}  = useMsal();
+  const isAuthenticated = localStorage.getItem("token") ;
   useEffect(() => {
     if (isAuthenticated === null) {
       setIsLoggedIn(false);
@@ -32,8 +35,9 @@ const Landing = (props) => {
     }
   }, [isAuthenticated]);
 
-  const logOut = () => {
+  const logOut = async() => {
     setIsLoggedIn(false);
+    // await instance.logoutRedirect()
     localStorage.removeItem("token")
     navigate("/Login");
   };
@@ -48,7 +52,6 @@ const Landing = (props) => {
   const handleNavbarToggle = () => {
     setOpenMobile(!openMobile);
   };
-
   const drawer = (
     <Box onClick={handleNavbarToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}>
