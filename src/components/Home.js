@@ -4,12 +4,21 @@ import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
+import { useMsal } from "@azure/msal-react";
 
 const Home = () => {
   const [data, setData] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const { instance } = useMsal();
+  const [username, setUsername] = useState('')
+  useEffect(() => {
+    const currentAccount = instance.getActiveAccount()
+    if (currentAccount) {
+      setUsername(currentAccount.username)
+    }
+  }, [instance])
 
   const onDelete = async (e) => {
     e.preventDefault();
@@ -119,17 +128,17 @@ const Home = () => {
 
   const grid = () => {
     return (
-          <DataGrid
-            rows={data}
-            columns={columns}
-            pageSize={10}
-            rowsPerPageOptions={[10]}
-            checkboxSelection
-            disableSelectionOnClick
-            onSelectionModelChange={setSelectedRows}
-            selectionModel={selectedRows}
-            loading={loading}
-          />
+      <DataGrid
+        rows={data}
+        columns={columns}
+        pageSize={10}
+        rowsPerPageOptions={[10]}
+        checkboxSelection
+        disableSelectionOnClick
+        onSelectionModelChange={setSelectedRows}
+        selectionModel={selectedRows}
+        loading={loading}
+      />
     );
   };
 
@@ -137,6 +146,7 @@ const Home = () => {
     <div>
       <Toolbar />
       <Grid container spacing={2} sx={{ mt: 10, width: "90%", ml: "5%" }}>
+        <p>Welcome {username}</p>
         <Box sx={{ height: 630, width: "100%" }}>{grid()}</Box>
       </Grid>
     </div>

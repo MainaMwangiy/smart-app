@@ -24,7 +24,7 @@ const Landing = (props) => {
   const [openDialog, setOpenDialog] = useState(false);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const msAuth = useIsAuthenticated();
+  const isMsAuthenticated = useIsAuthenticated();
   const {instance}  = useMsal();
   const isAuthenticated = localStorage.getItem("token") ;
   useEffect(() => {
@@ -34,6 +34,12 @@ const Landing = (props) => {
       setIsLoggedIn(true);
     }
   }, [isAuthenticated]);
+
+  const login = async() => {
+    await instance.loginRedirect({
+      scopes: ['user.read']
+  })
+  }
 
   const logOut = async() => {
     setIsLoggedIn(false);
@@ -167,6 +173,43 @@ const Landing = (props) => {
                       <div className="d-flex justify-space-between"></div>
                     </>
                   ) : null}
+                  {/* {isMsAuthenticated ?  <div className="nav-item">
+                          <Typography
+                            variant="h6"
+                            component="div"
+                            sx={{
+                              flexGrow: 1,
+                              display: "flex",
+                              justifyContent: "flex-end",
+                            }}
+                          >
+                            <Link
+                              sx={{ color: "#fff" }}
+                              to="/login"
+                              onClick={login}
+                            >
+                              {"login"}
+                            </Link>
+                          </Typography>
+                        </div> :  <div className="nav-item">
+                          <Typography
+                            variant="h6"
+                            component="div"
+                            sx={{
+                              flexGrow: 1,
+                              display: "flex",
+                              justifyContent: "flex-end",
+                            }}
+                          >
+                            <Link
+                              sx={{ color: "#fff" }}
+                              to="/Logout"
+                              onClick={logOut}
+                            >
+                              {"Logout"}
+                            </Link>
+                          </Typography>
+                        </div>} */}
                 </>
               </Box>
             </>
