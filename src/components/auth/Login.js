@@ -3,6 +3,7 @@ import axios from "axios";
 import { Grid, TextField, Button, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import {useMsal} from '@azure/msal-react';
 
 const initialValues = Object.freeze({
   email: "",
@@ -12,6 +13,7 @@ const initialValues = Object.freeze({
 export const Login = () => {
   const [formData, setFormData] = useState(initialValues);
   const navigate = useNavigate();
+  const {instance}  = useMsal();
   const onChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
@@ -51,6 +53,12 @@ export const Login = () => {
       });
     }
   };
+
+  const microsoftLogin = async() =>{
+    await instance.loginRedirect({
+      scopes: ['user.read']
+  })
+  }
   return (
     <form onSubmit={login}>
       <Grid container spacing={2} sx={{ mt: 10, width: "50%", ml: "25%" }}>
@@ -84,6 +92,13 @@ export const Login = () => {
             className="justify-content-start"
           >
             {"Login"}
+          </Button>
+          <Button 
+            variant="contained"
+            sx={{ m: 2 }}
+            className="justify-content-start"
+            onClick={microsoftLogin}>
+            {"Login With Microsoft"}
           </Button>
           <Link href="/Register" sx={{}} className="justify-content-end">
             {"No account? Register"}
