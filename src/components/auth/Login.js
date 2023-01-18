@@ -71,6 +71,8 @@ export const Login = () => {
             onChange={onChange}
             variant="outlined"
             fullWidth
+            error={!formData.email}
+            helperText="Email is required"
           />
         </Grid>
         <Grid item xs={12}>
@@ -82,6 +84,8 @@ export const Login = () => {
             onChange={onChange}
             variant="outlined"
             fullWidth
+            error={!formData.password}
+            helperText="Password is required"
           />
         </Grid>
         <div className="d-flex justify-content-between">
