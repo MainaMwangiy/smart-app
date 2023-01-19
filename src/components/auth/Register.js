@@ -58,6 +58,8 @@ export const Register = () => {
             onChange={onChange}
             variant="outlined"
             fullWidth
+            error={!formData.email}
+            helperText="Email is required"
           />
         </Grid>
         <Grid item xs={12}>
@@ -69,6 +71,8 @@ export const Register = () => {
             onChange={onChange}
             variant="outlined"
             fullWidth
+            error={!formData.password}
+            helperText="Password is required"
           />
         </Grid>
         <Grid item xs={12}>
@@ -80,6 +84,8 @@ export const Register = () => {
             onChange={onChange}
             variant="outlined"
             fullWidth
+            error={!formData.cpassword}
+            helperText="Confirmation Password is required"
           />
         </Grid>
         <div className="d-flex justify-content-between">
