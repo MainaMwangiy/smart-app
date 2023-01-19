@@ -8,6 +8,10 @@ import {
   AppBar,
   Drawer,
   Link,
+  Tooltip,
+  IconButton,
+  Avatar,
+  Menu,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import React, { useEffect, useState } from "react";
@@ -15,6 +19,8 @@ import React, { useEffect, useState } from "react";
 import AddEmployee from "./AddEmployee";
 import { useNavigate } from "react-router-dom";
 import { useIsAuthenticated, useMsal } from "@azure/msal-react";
+
+const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 // const constants = navHeaders;
 const Landing = (props) => {
@@ -25,8 +31,19 @@ const Landing = (props) => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const isMsAuthenticated = useIsAuthenticated();
-  const {instance}  = useMsal();
-  const isAuthenticated = localStorage.getItem("token") ;
+  const { instance } = useMsal();
+  const isAuthenticated = localStorage.getItem("token");
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+
+
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
   useEffect(() => {
     if (isAuthenticated === null) {
       setIsLoggedIn(false);
@@ -35,13 +52,13 @@ const Landing = (props) => {
     }
   }, [isAuthenticated]);
 
-  const login = async() => {
+  const login = async () => {
     await instance.loginRedirect({
       scopes: ['user.read']
-  })
+    })
   }
 
-  const logOut = async() => {
+  const logOut = async () => {
     setIsLoggedIn(false);
     // await instance.logoutRedirect()
     localStorage.removeItem("token")
@@ -169,6 +186,36 @@ const Landing = (props) => {
                             </Link>
                           </Typography>
                         </div>
+
+                        <Box sx={{ flexGrow: 0 }}>
+                          <Tooltip title="Open settings">
+                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                              <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                            </IconButton>
+                          </Tooltip>
+                          <Menu
+                            sx={{ mt: '45px' }}
+                            id="menu-appbar"
+                            anchorEl={anchorElUser}
+                            anchorOrigin={{
+                              vertical: 'top',
+                              horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                              vertical: 'top',
+                              horizontal: 'right',
+                            }}
+                            open={Boolean(anchorElUser)}
+                            onClose={handleCloseUserMenu}
+                          >
+                            {settings.map((setting) => (
+                              <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                                <Typography textAlign="center">{setting}</Typography>
+                              </MenuItem>
+                            ))}
+                          </Menu>
+                        </Box>
                       </div>
                       <div className="d-flex justify-space-between"></div>
                     </>
