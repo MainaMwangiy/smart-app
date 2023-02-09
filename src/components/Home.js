@@ -1,6 +1,6 @@
 import { Box, Toolbar, Grid, Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
@@ -138,6 +138,9 @@ const Home = () => {
         onSelectionModelChange={setSelectedRows}
         selectionModel={selectedRows}
         loading={loading}
+        components={{
+          Toolbar: GridToolbar
+        }}
       />
     );
   };
