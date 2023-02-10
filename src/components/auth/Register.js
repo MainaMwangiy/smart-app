@@ -1,4 +1,4 @@
-import { Grid, TextField, Button, Link } from "@mui/material";
+import { Grid, TextField, Button, Link, Card, useMediaQuery } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
@@ -14,6 +14,7 @@ const initialValues = Object.freeze({
 export const Register = () => {
   const [formData, setFormData] = useState(initialValues);
   const navigate = useNavigate();
+  const isMobile = useMediaQuery('(max-width: 600px)');
   const onChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
@@ -47,61 +48,57 @@ export const Register = () => {
     }
   };
   return (
-    <form onSubmit={save}>
-      <Grid container spacing={2} sx={{ mt: 10, width: "50%", ml: "25%" }}>
-        <Grid item xs={12}>
-          <TextField
-            id="outlined-basic"
-            label="Email"
-            name="email"
-            value={formData.email || ""}
-            onChange={onChange}
-            variant="outlined"
-            fullWidth
-            error={!formData.email}
-            helperText="Email is required"
-          />
+    <Card sx={{ mt: isMobile ? 2 : 10, p: 4, width: isMobile ?  "80%" : "50%", ml: isMobile ? "0%" : "25%" }} >
+      <form onSubmit={save}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={12} sm={12}>
+            <TextField
+              id="outlined-basic"
+              label="Email"
+              name="email"
+              value={formData.email || ""}
+              onChange={onChange}
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="outlined-basic"
+              label="Password"
+              name="password"
+              value={formData.password || ""}
+              onChange={onChange}
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="outlined-basic"
+              label="Confirm Password"
+              name="cpassword"
+              value={formData.cpassword || ""}
+              onChange={onChange}
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+          <div className="d-flex justify-content-between">
+            <Button
+              variant="contained"
+              sx={{ m: 2 }}
+              type="submit"
+              className="justify-content-start"
+            >
+              {"Register"}
+            </Button>
+            <Link href="/Login" sx={{}} className="justify-content-end"  variant="outlined" role="button" style={{textDecoration: "none"}}>
+              {"Has account? Login"}
+            </Link>
+          </div>
         </Grid>
-        <Grid item xs={12}>
-          <TextField
-            id="outlined-basic"
-            label="Password"
-            name="password"
-            value={formData.password || ""}
-            onChange={onChange}
-            variant="outlined"
-            fullWidth
-            error={!formData.password}
-            helperText="Password is required"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            id="outlined-basic"
-            label="Confirm Password"
-            name="cpassword"
-            value={formData.cpassword || ""}
-            onChange={onChange}
-            variant="outlined"
-            fullWidth
-            error={!formData.cpassword}
-            helperText="Confirmation Password is required"
-          />
-        </Grid>
-        <div className="d-flex justify-content-between">
-          <Button
-            variant="contained"
-            sx={{ m: 2 }}
-            type="submit"
-            className="justify-content-start"
-          >
-            {"Register"}
-          </Button>
-          <Link href="/Login" sx={{}} className="justify-content-end">
-            {"Has account? Login"}
-          </Link>
-        </div>
-      </Grid>
-    </form>
+      </form>
+    </Card>
   );
 };
